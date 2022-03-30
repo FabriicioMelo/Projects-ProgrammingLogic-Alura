@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch Flags</title>
+    <style>
+        body, html {
+            margin: 0;
+            background-color: darkslategrey;
+        }
+        .canvas-div{
+            display: flex;
+            justify-content: center;
+        }
+        canvas {
+            width: 75%;
+        }
+        @media(max-width: 768px){
+            canvas{
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas-div">
+        <canvas width="600" height="400"></canvas>
+    </div>
+</body>
+<script>
+    let canvas = document.querySelector("canvas");
+    let context = canvas.getContext("2d");
+
+    // DRAWING FUNCTIONS
+
+    function drawRect(positionX, positionY, width, height, color){
+        context.fillStyle = color;
+        context.fillRect(positionX, positionY, width, height);
+    }
+
+    function drawCircle(positionX, positionY, radius, color){
+        context.fillStyle = color;
+        context.beginPath();
+        context.arc(positionX, positionY, radius, 0, Math.PI * 2);
+        context.fill();
+    }
+
+    function drawTriangle(positionX, positionY, width, height, color){
+        context.fillStyle = color;
+        context.beginPath();
+        context.moveTo(width / 2, positionY);
+        context.lineTo(positionX, height);
+        context.lineTo(width - positionX, height);
+        context.fill();
+    }
+    
+    // FLAGS FUNCTIONS
+
+    function drawBrazilianFlag() {
+        drawRect(0, 0, 600, 400, "green");
+        drawTriangle(25, 25, 600, 200, "yellow");
+        drawTriangle(25, 375, 600, 200, "yellow");
+        drawCircle(300, 200, 100, "darkblue");
+    }
+
+    function drawGermanyFlag() {
+		drawRect(0, 0, 600, 400 / 3, "black");		
+		drawRect(0, 400 / 3, 600, 400 / 3, "red");
+		drawRect(0, 400 / 3 + 400 / 3, 600, 400 / 3, "yellow");
+	}
+
+    // STORING THE FLAGS FUNCTION
+    drawFlag = new Array(
+        drawBrazilianFlag,
+        drawGermanyFlag,
+    );
+
+    // DRAW FIRST FLAG
+    drawFlag[0]();
+    let flagId = 0;
+
+	function changeFlag(){
+        if(flagId + 1 < drawFlag.length){
+            flagId ++;
+            drawFlag[flagId]();
+        }else{
+            flagId = 0;
+            drawFlag[flagId]();
+        }
+	}
+
+	setInterval(changeFlag, 1500);
+</script>
+</html>
