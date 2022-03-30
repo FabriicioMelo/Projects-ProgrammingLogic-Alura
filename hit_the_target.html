@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hit the target</title>
+    <style>
+        html, body {
+            margin: 0;
+            background-color: lemonchiffon;
+        }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    let canvas = document.querySelector("canvas");
+	let context = canvas.getContext("2d");
+
+	function drawCircle(positionX, positionY, radius, color){
+		context.fillStyle = color;
+		context.beginPath();
+		context.arc(positionX + radius, positionY + radius, radius, 0, Math.PI * 2);
+		context.fill();
+	}
+
+    function clearCanvas(){
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function adjustCanvasSize(){
+        canvas.width = screen.availWidth;
+        canvas.height = screen.availHeight;
+    }
+
+    // TARGET VARIABLES
+	let targetScale = 30;
+	let targetRadius = 0;
+    let targetX = 0;
+	let targetY = 0;
+
+	function spawnTarget(){
+        if(canvas.width > canvas.height){
+            targetRadius = targetScale * ((canvas.width + canvas.height) / 2 / 500);
+        }else{
+            targetRadius = (targetScale * 1.3) * ((canvas.width + canvas.height) / 2 / 500);
+        }
+		targetX = Math.round(Math.random() * (canvas.width - (targetRadius * 2)));
+		targetY = Math.round(Math.random() * (canvas.height - (targetRadius * 2)));
+		drawCircle(targetX, targetY, targetRadius, "red");
+		drawCircle(targetX + targetRadius / 3, targetY + targetRadius / 3, targetRadius / 3 + targetRadius / 3 , "lightgray");
+		drawCircle(targetX + targetRadius / 2 + targetRadius / 6, targetY + targetRadius / 2 + targetRadius / 6, targetRadius / 3, "red");
+    }
+
+	function updateTargetPosition(){
+		clearCanvas();
+        adjustCanvasSize();
+		spawnTarget();
+	}
+
+    canvas.onclick = function(args){
+		let mouseX = args.pageX - canvas.offsetLeft;
+		let mouseY = args.pageY - canvas.offsetTop;
+
+        if(mouseX > targetX && mouseX < targetX + targetRadius * 2){
+            if(mouseY > targetY && mouseY < targetY + targetRadius * 2){
+                alert("U got it");
+            }
+        }
+	}
+	
+    //Start
+    updateTargetPosition();
+    //Update
+	setInterval(updateTargetPosition, 1000);
+</script>
+</html>
